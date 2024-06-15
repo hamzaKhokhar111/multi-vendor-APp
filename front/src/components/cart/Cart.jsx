@@ -5,12 +5,12 @@ import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import { addTocart, removeFromCart } from "../../redux/actions/cart";
-import {addTocart} from '../../redux/actions/cart'
+import { addTocart } from '../../redux/actions/cart';
 import { toast } from "react-toastify";
 
 const Cart = ({ setOpenCart }) => {
-  const { cart } = useSelector((state) => state.cart);
+  const cartState = useSelector((state) => state.cart || { cart: [] });
+  const { cart } = cartState;
   const dispatch = useDispatch();
 
   const removeFromCartHandler = (data) => {
@@ -29,7 +29,7 @@ const Cart = ({ setOpenCart }) => {
   return (
     <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
       <div className="fixed top-0 right-0 h-full w-[80%] 800px:w-[25%] bg-white flex flex-col overflow-y-scroll justify-between shadow-sm">
-        {cart && cart.length === 0 ? (
+        {cart.length === 0 ? (
           <div className="w-full h-screen flex items-center justify-center">
             <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
               <RxCross1
@@ -44,7 +44,7 @@ const Cart = ({ setOpenCart }) => {
           <>
             <div>
               <div className="flex w-full justify-end pt-5 pr-5">
-                <RxCross1
+                <RxCross1   
                   size={25}
                   className="cursor-pointer"
                   onClick={() => setOpenCart(false)}
@@ -54,22 +54,21 @@ const Cart = ({ setOpenCart }) => {
               <div className={`${styles.noramlFlex} p-4`}>
                 <IoBagHandleOutline size={25} />
                 <h5 className="pl-2 text-[20px] font-[500]">
-                  {cart && cart.length} items
+                  {cart.length} items
                 </h5>
               </div>
 
               {/* cart Single Items */}
               <br />
               <div className="w-full border-t">
-                {cart &&
-                  cart.map((i, index) => (
-                    <CartSingle
-                      key={index}
-                      data={i}
-                      quantityChangeHandler={quantityChangeHandler}
-                      removeFromCartHandler={removeFromCartHandler}
-                    />
-                  ))}
+                {cart.map((i, index) => (
+                  <CartSingle
+                    key={index}
+                    data={i}
+                    quantityChangeHandler={quantityChangeHandler}
+                    removeFromCartHandler={removeFromCartHandler}
+                  />
+                ))}
               </div>
             </div>
 

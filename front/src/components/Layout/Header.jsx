@@ -17,6 +17,7 @@ import Cart from '../cart/Cart'
 // import Cart from "../cart/Cart";
 // import Wishlist from "../Wishlist/Wishlist";
 import { RxCross1 } from "react-icons/rx";
+import Wishlist from "../Wishlist/Wishlist";
 
 const Header = ({ activeHeading }) => {
       const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -55,8 +56,8 @@ const Header = ({ activeHeading }) => {
 
   return (
    <>
-   <div className={`${styles.section}`}>
-    <div className="800px:h-[50px] 800px:my-[20px] 800px:flex flex items-center justify-between">
+   <div className={`${styles.section}  w-full`}>
+    <div className="800px:h-[50px] 800px:my-[20px]  800px:flex flex items-center justify-between">
       <div>
         <Link to='/'>
         <img
@@ -108,7 +109,7 @@ const Header = ({ activeHeading }) => {
           </div>
     </div>
  
-<div className={`${styles.section} flex bg-blue -500 w-full relative ${styles.noramlFlex} justify-between`}>
+<div className={`${styles.section} flex bg-blue-500  w-full sticky ${styles.noramlFlex} justify-between`}>
   {/* categories */}
   <div onClick={() => setDropDown(!dropDown)}>
             <div className="relative   h-[60px] mt-[10px] w-[270px] s 1000px:block">

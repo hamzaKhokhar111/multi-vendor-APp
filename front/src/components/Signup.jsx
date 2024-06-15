@@ -9,7 +9,7 @@ import { server } from "../../server";
 import { toast } from "react-toastify";
 
 // import { server } from "../../server";
-// import { toast } from "react-toastify";
+// import { toast } from "react-toastify";  
 // import { } from 'react-toastify'
 const Signup = () => {
   // const navigate = useNavigate();
