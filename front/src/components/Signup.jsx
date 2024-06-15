@@ -6,6 +6,7 @@ import { RxAvatar } from "react-icons/rx";
 // import {RxAvator} from 'react-icons/rx'
 import axios from "axios";
 import { server } from "../../server";
+import { toast } from "react-toastify";
 
 // import { server } from "../../server";
 // import { toast } from "react-toastify";
@@ -45,9 +46,15 @@ const Signup = () => {
 
 
     axios.post(`${server}/user/create-user`,newForm,config).then((res)=>{
-      console.log(res)
+      console.log(res);
+      setName("");
+      setemail("");
+      setPassword("");
+      setAvatar();
     }).catch((err)=>{
-      console.log(err)
+      console.log(err.response.data.message)
+    // toast.err("error");
+    // alert("nor register")
     })
 
 

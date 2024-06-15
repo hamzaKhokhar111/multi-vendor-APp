@@ -4,6 +4,7 @@ const User = require('../model/model'); // Ensure you have the correct path to t
 const router = express.Router();
 const multer = require("multer");
 const ErrorHandler = require("../utills/ErrorHandler");
+const catchAsyncError = require("../middleware/catchAsyncError");
 
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
@@ -22,10 +23,13 @@ router.get("/test", (req, res) => {
 });
 
 router.post("/create-user", upload.single('avatar'), async (req, res, next) => {
-    const { name, email, password,avatar } = req.body;
+    const { name, email, password ,avatar} = req.body;
     try {
         const userEmail = await User.findOne({ email });
         if (userEmail) {
+            const filename=req.file.filename;
+            const filePath=`uploads/${filename}`;
+            
             return next(new ErrorHandler("User already exists", 400));
         }
 
@@ -53,5 +57,53 @@ router.use((err, req, res, next) => {
         message: err.message || 'Server Error',
     });
 });
+
+//login
+router.post('/login-user', catchAsyncError(async (req, resp, next) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return next(new ErrorHandler("please provide all fields", 400));
+        }
+
+        const user = await User.findOne({ email }).select("+password");
+
+        if (!user) {
+            return next(new ErrorHandler("user does not exist", 400));
+        }
+
+        const isPasswordValid = await user.comparePassword(password);   
+
+        if (!isPasswordValid) {
+            return next(new ErrorHandler("please provide the correct information", 400));
+        }
+
+        // Continue with the login process (e.g., generating a token, etc.)
+        // For example:
+        // const token = user.generateAuthToken();
+        // resp.status(200).json({ success: true, token });
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+}));
+
+router.get('/getuser', isAuthenticated,catchAsyncError(async(req,res,next)=>{
+    try {
+        const user= await User.findById(req.user.id);
+
+        if(!user){
+            return next(new ErrorHandler("User doesn't exist  "))
+        }
+
+        res.status(200).json({
+            success:true,
+            user
+        })
+    } catch(error) {
+        return next(new ErrorHandler(error.message,500))
+    }
+}))
+
 
 module.exports = router;

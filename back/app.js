@@ -8,7 +8,10 @@ const  user =require("./controller/user")
 
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5000",
+    credentials: true,
+}));
 app.use(cookiesParser());
 app.use("/",express.static("uploads"));
 app.use(bodyParser.urlencoded({extended:true,limit:"50mb"}));
