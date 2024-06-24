@@ -4,7 +4,8 @@ const app=express();
 const cookiesParser=require("cookie-parser")
 const bodyParser=require("body-parser")
 const cors=require("cors");
-const  user =require("./controller/user")
+const  user =require("./controller/user");
+const shop = require("./model/shop");
 
 
 app.use(express.json());
@@ -28,6 +29,7 @@ if(process.env.NODE_ENV !== "PRODUCTION"){
 // })
 
 app.use("/api/v2/user",user);
+app.use("/api/v2/shop",shop);
 
 
 // app.use(ErrorHandler);

@@ -6,7 +6,7 @@ import { productData } from "../../../static/data";
 import ProductCard from "../ProductCard/ProductCard";
 // import ProductCard from "../ProductCard/ProductCard";
 
-const BestDeals = () => {
+const   BestDeals = () => {
   const [data, setData] = useState([]);
 //   const { allProducts } = useSelector((state) => state.products); 
   useEffect(() => {

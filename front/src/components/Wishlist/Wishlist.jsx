@@ -1,27 +1,26 @@
-    import React, { useState } from "react";
-    import { RxCross1 } from "react-icons/rx";
-    import { BsCartPlus } from "react-icons/bs";
-    import styles from "../../styles/styles";
-    import { AiOutlineHeart } from "react-icons/ai";
-    import { useDispatch, useSelector } from "react-redux";
-    // import { removeFromWishlist } from "../../redux/actions/wishlist";
-    import { addTocart } from "../../redux/actions/cart";
-    import { removeFromWishlist } from "../../redux/actions/wishlist";
+import React, { useState } from "react";
+import { RxCross1 } from "react-icons/rx";
+import { BsCartPlus } from "react-icons/bs";
+import styles from "../../styles/styles";
+import { AiOutlineHeart } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { addTocart } from "../../redux/actions/cart";
+import { removeFromWishlist } from "../../redux/actions/wishlist";
 
-    const Wishlist = ({ setOpenWishlist }) => {
-    const { wishlist } = useSelector((state) => state.wishlist);
-    const dispatch = useDispatch();
+const Wishlist = ({ setOpenWishlist }) => {
+  const wishlistState = useSelector((state) => state.wishlist);
+  const wishlist = wishlistState ? wishlistState.wishlist : [];
+  const dispatch = useDispatch();
 
-    const removeFromWishlistHandler = (data) => {
-        dispatch(removeFromWishlist(data));
-    };
+  const removeFromWishlistHandler = (data) => {
+    dispatch(removeFromWishlist(data));
+  };
 
-    const addToCartHandler = (data) => {
-        const newData = {...data, qty:1};
-        dispatch(addTocart(newData));
-        setOpenWishlist(false);
-    }
-
+  const addToCartHandler = (data) => {
+    const newData = { ...data, qty: 1 };
+    dispatch(addTocart(newData));
+    setOpenWishlist(false);
+  };
     return (
         <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
         <div className="fixed top-0 right-0 h-full w-[80%] overflow-y-scroll 800px:w-[25%] bg-white flex flex-col justify-between shadow-sm">
@@ -81,7 +80,7 @@
             onClick={() => removeFromWishlistHandler(data)}
             />
             <img
-            src={`${data?.images[0]?.url}`}
+            src={`${data.image_Url[0].url}`}
             alt=""
             className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
             />

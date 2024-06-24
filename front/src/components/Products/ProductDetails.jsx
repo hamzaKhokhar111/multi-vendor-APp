@@ -1,3 +1,44 @@
+
+// import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import styles from '../../styles/styles';
+// // import 
+
+// function ProductDetails({ data }) {
+//   const [count, setCount] = useState(1);
+//   const [click, setClick] = useState(false);
+//   const [select, setSelect] = useState(0);
+//   const navigate = useNavigate();
+
+//   return (
+//     <div className="bg-white">
+//       {data ? (
+//         <div className={`${styles.section} w-[90%] 800px:w-[80%] h-screen`}>
+//           <div className="w-full">
+//             <div className="block w-full 800px:flex">
+//               <div className="w-full 800px:w-[50%]">
+//                 <div className={`${select === 0 ? 'border' : 'null'} cursor-pointer`}>
+//                   <img
+//                     src={data?.image_Url[0].url}
+//                     onClick={() => setSelect(0)}
+//                     className="h-[200px]"
+//                     alt="Product"
+//                   />
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       ) : (
+//         <div>Loading...</div>
+//       )}
+//     </div>
+//   );
+// }
+
+// export default ProductDetails;
+
+
 import React, { useEffect, useState } from "react";
 import {
   AiFillHeart,
@@ -7,8 +48,6 @@ import {
 } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { getAllProductsShop } from "../../redux/actions/product";
-import { server } from "../../server";
 import styles from "../../styles/styles";
 import {
   addToWishlist,
@@ -16,27 +55,27 @@ import {
 } from "../../redux/actions/wishlist";
 import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
-import Ratings from "./Ratings";
 import axios from "axios";
 
 const ProductDetails = ({ data }) => {
-  const { wishlist } = useSelector((state) => state.wishlist);
-  const { cart } = useSelector((state) => state.cart);
-  const { user, isAuthenticated } = useSelector((state) => state.user);
-  const { products } = useSelector((state) => state.products);
+  const { wishlist = [] } = useSelector((state) => state.wishlist || {});
+  const { cart = [] } = useSelector((state) => state.cart || {});
+  const { user, isAuthenticated } = useSelector((state) => state.user || {});
+  const { products = [] } = useSelector((state) => state.products || {});
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
-  const dispatch = useDispatch();ProductDetailsPage
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(getAllProductsShop(data && data?.shop._id));
+    // dispatch(getAllProductsShop(data && data?.shop._id));
     if (wishlist && wishlist.find((i) => i._id === data?._id)) {
       setClick(true);
     } else {
       setClick(false);
     }
-  }, [data, wishlist]);
+  }, [data, wishlist, dispatch]);
 
   const incrementCount = () => {
     setCount(count + 1);
@@ -85,10 +124,9 @@ const ProductDetails = ({ data }) => {
       0
     );
 
-  const avg =  totalRatings / totalReviewsLength || 0;
+  const avg = totalRatings / totalReviewsLength || 0;
 
   const averageRating = avg.toFixed(2);
-
 
   const handleMessageSubmit = async () => {
     if (isAuthenticated) {
@@ -112,19 +150,24 @@ const ProductDetails = ({ data }) => {
     }
   };
 
+
   return (
     <div className="bg-white">
+      {/* <h1>ooookkkkk</h1> */}
       {data ? (
         <div className={`${styles.section} w-[90%] 800px:w-[80%]`}>
           <div className="w-full py-5">
-            <div className="block w-full 800px:flex">
+            <div className=" w-full flex 800px:flex">
               <div className="w-full 800px:w-[50%]">
                 <img
-                  src={`${data && data.images[select]?.url}`}
+                  // src={`${data && data.images[select]?.url}`}
+                  // src={data?.image_Url[0].url}
+                  src={data?.image_Url[0].url}
                   alt=""
                   className="w-[80%]"
+                  onClick={()=>setSelect(0)}
                 />
-                <div className="w-full flex">
+                {/* <div className="w-full flex">
                   {data &&
                     data.images.map((i, index) => (
                       <div
@@ -145,7 +188,7 @@ const ProductDetails = ({ data }) => {
                       select === 1 ? "border" : "null"
                     } cursor-pointer`}
                   ></div>
-                </div>
+                </div> */}
               </div>
               <div className="w-full 800px:w-[50%] pt-5">
                 <h1 className={`${styles.productTitle}`}>{data.name}</h1>
@@ -208,13 +251,13 @@ const ProductDetails = ({ data }) => {
                 <div className="flex items-center pt-8">
                   <Link to={`/shop/preview/${data?.shop._id}`}>
                     <img
-                      src={`${data?.shop?.avatar?.url}`}
+                      src={`${data.shop.shop_avatar.url}`}
                       alt=""
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
                   </Link>
                   <div className="pr-8">
-                    <Link to={`/shop/preview/${data?.shop._id}`}>
+                    <Link>
                       <h3 className={`${styles.shop_name} pb-1 pt-1`}>
                         {data.shop.name}
                       </h3>
@@ -308,33 +351,33 @@ const ProductDetailsInfo = ({
         </>
       ) : null}
 
-      {active === 2 ? (
-        <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
-          {data &&
-            data.reviews.map((item, index) => (
-              <div className="w-full flex my-2">
-                <img
-                  src={`${item.user.avatar?.url}`}
-                  alt=""
-                  className="w-[50px] h-[50px] rounded-full"
-                />
-                <div className="pl-2 ">
-                  <div className="w-full flex items-center">
-                    <h1 className="font-[500] mr-3">{item.user.name}</h1>
-                    <Ratings rating={data?.ratings} />
-                  </div>
-                  <p>{item.comment}</p>
-                </div>
-              </div>
-            ))}
-
-          <div className="w-full flex justify-center">
-            {data && data.reviews.length === 0 && (
-              <h5>No Reviews have for this product!</h5>
-            )}
+{active === 2 ? (
+  <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
+    {data && data.reviews ? (
+      data.reviews.map((item, index) => (
+        <div className="w-full flex my-2" key={index}>
+          <img
+            src={item.user.avatar?.url}
+            alt=""
+            className="w-[50px] h-[50px] rounded-full"
+          />
+          <div className="pl-2">
+            <div className="w-full flex items-center">
+              <h1 className="font-[500] mr-3">{item.user.name}</h1>
+              <Ratings rating={data?.ratings} />
+            </div>
+            <p>{item.comment}</p>
           </div>
         </div>
-      ) : null}
+      ))
+    ) : (
+      <div className="w-full flex justify-center">
+        <h5>No Reviews have for this product!</h5>
+      </div>
+    )}
+  </div>
+) : null}
+
 
       {active === 3 && (
         <div className="w-full block 800px:flex p-5">
@@ -342,7 +385,7 @@ const ProductDetailsInfo = ({
             <Link to={`/shop/preview/${data.shop._id}`}>
               <div className="flex items-center">
                 <img
-                  src={`${data?.shop?.avatar?.url}`}
+                  src={`${data.shop.shop_avatar.url}`}
                   className="w-[50px] h-[50px] rounded-full"
                   alt=""
                 />

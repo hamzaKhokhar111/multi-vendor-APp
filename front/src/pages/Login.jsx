@@ -5,7 +5,7 @@ function Login() {
     <>
     <Loogin/>
     </>
-  ) 
+  )   
 }
 
 export default Login;

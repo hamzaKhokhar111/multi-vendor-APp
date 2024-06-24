@@ -5,7 +5,7 @@ import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addTocart } from '../../redux/actions/cart';
+import { addTocart, removeFromCart } from '../../redux/actions/cart';
 import { toast } from "react-toastify";
 
 const Cart = ({ setOpenCart }) => {
@@ -28,7 +28,7 @@ const Cart = ({ setOpenCart }) => {
 
   return (
     <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
-      <div className="fixed top-0 right-0 h-full w-[80%] 800px:w-[25%] bg-white flex flex-col overflow-y-scroll justify-between shadow-sm">
+      <div className="fixed top-0 right-0 h-full w-[50%] 800px:w-[25%] bg-white flex flex-col overflow-y-scroll justify-between shadow-sm">
         {cart.length === 0 ? (
           <div className="w-full h-screen flex items-center justify-center">
             <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
@@ -65,7 +65,7 @@ const Cart = ({ setOpenCart }) => {
                   <CartSingle
                     key={index}
                     data={i}
-                    quantityChangeHandler={quantityChangeHandler}
+                    // quantityChangeHandler={quantityChangeHandler}
                     removeFromCartHandler={removeFromCartHandler}
                   />
                 ))}
@@ -104,6 +104,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
       quantityChangeHandler(updateCartData);
     }
   };
+  
 
   const decrement = (data) => {
     setValue(value === 1 ? 1 : value - 1);
@@ -130,7 +131,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
           </div>
         </div>
         <img
-          src={`${data?.images[0]?.url}`}
+          src={`${data.image_Url[0].url}`}
           alt=""
           className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
         />
@@ -145,6 +146,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
         </div>
         <RxCross1
           className="cursor-pointer"
+          size={25}
           onClick={() => removeFromCartHandler(data)}
         />
       </div>
