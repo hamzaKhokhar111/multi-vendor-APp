@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 // import axios from "axios";
 // import { server } from "../../server";
 import { toast } from "react-toastify";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { server } from "../../server";
 
 const Loogin = () => {
@@ -15,24 +15,26 @@ const Loogin = () => {
   const [visible, setVisible] = useState(false);
 
   const handleSubmit = async (e) => {
+    // alert("okk")
     e.preventDefault();
 
-    await axios.post(
-        `${server}/user/login-user`,
-        {
+    await axios.post('http://localhost:5000/api/v2/user/login-user',{
           email,
           password,
         },
         { withCredentials: true }
       )
+      
       .then((res) => {
+        navigate('/');
         toast.success("Login Success!");
         alert("okkk loguin done")
-        navigate("/");
+        
         window.location.reload(true); 
       })
       .catch((err) => {
         // alert("errro", err)
+        console.log(err)
         toast.error(err.response.data.message);
       });
   };

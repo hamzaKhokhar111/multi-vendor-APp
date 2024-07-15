@@ -18,6 +18,7 @@ import Cart from '../cart/Cart'
 // import Wishlist from "../Wishlist/Wishlist";
 import { RxCross1 } from "react-icons/rx";
 import Wishlist from "../Wishlist/Wishlist";
+import { categoriesData } from "../../static/data";
 
 const Header = ({ activeHeading }) => {
       const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -171,7 +172,7 @@ const Header = ({ activeHeading }) => {
               <div className={`${styles.noramlFlex}`}>
                 <div className="relative cursor-pointer mr-[15px]">
                   {isAuthenticated ? (
-                    <Link to="/profile">
+                    <Link to="/profile">  
                       <img
                         src={`${user?.avatar?.url}`}
                         className="w-[35px] h-[35px] rounded-full"

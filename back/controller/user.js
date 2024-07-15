@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.get("/test", (req, res) => {
-    res.send("Hamza Ashraf");
+    res.send("Hamza Ashraf KHOKHAR");
 });
 
 router.post("/create-user", upload.single('avatar'), async (req, res, next) => {
@@ -88,41 +88,62 @@ router.post('/login-user', catchAsyncError(async (req, resp, next) => {
     }
 }));
 
-router.get('/getuser', isAuthenticated,catchAsyncError(async(req,res,next)=>{
-    try {
-        const user= await User.findById(req.user.id);
+// router.get('/getuser',catchAsyncError(async(req,res,next)=>{
+//     try {
+//         const user= await User.findById(req.user.id);
 
-        if(!user){
-            return next(new ErrorHandler("User doesn't exist  "))
+//         if(!user){
+//             return next(new ErrorHandler("User doesn't exist  "))
+//         }
+
+//         res.status(200).json({
+//             success:true,
+//             user
+//         })
+//     } catch(error) {
+//         return next(new ErrorHandler(error.message,500))
+//     }
+// }))
+router.get('/getuser', catchAsyncError(async(req, res, next) => {
+    try {
+        if (!req.user) {
+            return next(new ErrorHandler("User not authenticated", 401));
+        }
+
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return next(new ErrorHandler("User doesn't exist", 404));
         }
 
         res.status(200).json({
-            success:true,
+            success: true,
             user
-        })
-    } catch(error) {
-        return next(new ErrorHandler(error.message,500))
-    }
-}))
-
-router.get("/logout",
-    catchAsyncErrors(async (req, res, next) => {
-      try {
-        res.cookie("token", null, {
-          expires: new Date(Date.now()),
-          httpOnly: true,
-          sameSite: "none",
-          secure: true,
         });
-        res.status(201).json({
-          success: true,
-          message: "Log out successful!",
-        });
-      } catch (error) {
+    } catch (error) {
         return next(new ErrorHandler(error.message, 500));
-      }
-    })
-  );
+    }
+}));
+
+
+// router.get("/logout",
+//     catchAsyncErrors(async (req, res, next) => {
+//       try {
+//         res.cookie("token", null, {
+//           expires: new Date(Date.now()),
+//           httpOnly: true,
+//           sameSite: "none",
+//           secure: true,
+//         });
+//         res.status(201).json({
+//           success: true,
+//           message: "Log out successful!",
+//         });
+//       } catch (error) {
+//         return next(new ErrorHandler(error.message, 500));
+//       }
+//     })
+//   );
   
 
 

@@ -1,91 +1,69 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-// import styles from "../../styles/styles";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,} from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
-// import {RxAvator} from 'react-icons/rx'
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 
-// import { server } from "../../server";
-// import { toast } from "react-toastify";  
-// import { } from 'react-toastify'
 const Signup = () => {
-  // const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [email, setemail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [avatar,setavatar]=useState("");
-  const[avatar,setAvatar]=useState("");
+  const [avatar, setAvatar] = useState("");
   const [visible, setVisible] = useState(false);
-
+const navigate=useNavigate();
   const handleFileInputChange = (e) => {
     const reader = new FileReader();
-
-    reader.onload = ()=> {
+    reader.onload = () => {
       if (reader.readyState === 2) {
         setAvatar(reader.result);
       }
     };
-
-
     reader.readAsDataURL(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const config = {Headers:{"Content-Type":"multipart/form-data"}};
 
+    const config = {
+      headers: { "Content-Type": "multipart/form-data" },
+    };
 
-    const newForm=new FormData();
+    const newForm = new FormData();
     newForm.append("file", avatar);
-    newForm.append("name",name);
-    newForm.append("email",email);
-    newForm.append("password",password);
+    newForm.append("name", name);
+    newForm.append("email", email);
+    newForm.append("password", password);
 
-
-    axios.post(`${server}/user/create-user`,newForm,config).then((res)=>{
+    try {
+      const res = await axios.post('http://localhost:5000/api/v2/user/create-user', newForm, config);
       console.log(res);
+      toast.success(res.data.message);
+      navigate('/');
       setName("");
-      setemail("");
+      setEmail("");
       setPassword("");
-      setAvatar();
-    }).catch((err)=>{
-      console.log(err.response.data.message)
-    // toast.err("error");
-    // alert("nor register")
-    })
-
-
-    // axioss
-      // axios.post(`${server}/user/create-user`, { name, email, password, avatar })
-      // .then((res) => {
-      //   toast.success(res.data.message);
-      //   setName("");
-      //   setEmail("");
-      //   setPassword("");
-      //   setAvatar();
-      // })
-      // .catch((error) => {
-      //   error(error.response.data.message);
-      // });
+      setAvatar("");
+    } catch (err) {
+      console.log(err.response?.data?.message || "An error occurred");
+      toast.error(err.response?.data?.message || "An error occurred");
+    }
   };
-
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Register new User 
+          Register new User
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6"  onSubmit={handleSubmit} >
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
-                htmlFor="email"
+                htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
                 Full Name
@@ -93,7 +71,7 @@ const Signup = () => {
               <div className="mt-1">
                 <input
                   type="text"
-                  name="text"
+                  name="name"
                   autoComplete="name"
                   required
                   value={name}
@@ -107,7 +85,7 @@ const Signup = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email Adress
+                Email Address
               </label>
               <div className="mt-1">
                 <input
@@ -116,7 +94,7 @@ const Signup = () => {
                   autoComplete="email"
                   required
                   value={email}
-                  onChange={(e) => setemail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
@@ -153,8 +131,8 @@ const Signup = () => {
                 )}
               </div>
             </div>
-            <div /*className={`${styles.noramlFlex} justify-between`} */>
-              <div /*className={`${styles.noramlFlex}`} */ >
+            <div className="flex justify-between">
+              <div className="flex items-center">
                 <input
                   type="checkbox"
                   name="remember-me"
@@ -170,7 +148,7 @@ const Signup = () => {
               </div>
               <div className="text-sm">
                 <a
-                  // href=".forgot-password"
+                  href="/forgot-password"
                   className="font-medium text-blue-600 hover:text-blue-500"
                 >
                   Forgot your password?
@@ -210,7 +188,6 @@ const Signup = () => {
                 </label>
               </div>
             </div>
-
             <div>
               <button
                 type="submit"
@@ -219,8 +196,8 @@ const Signup = () => {
                 Submit
               </button>
             </div>
-            <div /*className={`${styles.noramlFlex} w-full`} */>
-              <h4>Already have any account?</h4>
+            <div className="flex justify-between w-full">
+              <h4>Already have an account?</h4>
               <Link to="/signin" className="text-blue-600 pl-2">
                 Sign In
               </Link>
